@@ -3,11 +3,97 @@
 use chrono::{DateTime, Duration, Local};
 use std::{fmt, fs, io::prelude::*, path::Path, process::Command, thread};
 
+// any additions to the task enum must be echoed across the
+// Task implementations
+#[derive(Debug)]
+enum Tasks {
+    Ruby,
+    Rust,
+    Monome,
+    Website,
+    Music,
+    Learning,
+    Supercollider,
+    Meditate,
+    Writing,
+    Poetry,
+    Chess,
+    Javascript,
+    Design,
+    None,
+}
+
+impl fmt::Display for Tasks {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        match *self {
+            Tasks::Ruby => write!(f, "0: Ruby"),
+            Tasks::Rust => write!(f, "1: Rust"),
+            Tasks::Monome => write!(f, "2: Monome"),
+            Tasks::Website => write!(f, "3: Website"),
+            Tasks::Music => write!(f, "4: Music"),
+            Tasks::Learning => write!(f, "5: Learning"),
+            Tasks::Supercollider => write!(f, "6: Supercollider"),
+            Tasks::Meditate => write!(f, "7: Meditate"),
+            Tasks::Writing => write!(f, "8: Writing"),
+            Tasks::Poetry => write!(f, "9: Poetry"),
+            Tasks::Chess => write!(f, "10: Chess"),
+            Tasks::Javascript => write!(f, "11: Javascript"),
+            Tasks::Design => write!(f, "12: Design"),
+            Tasks::None => write!(f, ""),
+        }
+    }
+}
+
+impl Tasks {
+    fn choose() -> Tasks {
+        let list = [
+            Tasks::Ruby,
+            Tasks::Rust,
+            Tasks::Monome,
+            Tasks::Website,
+            Tasks::Music,
+            Tasks::Learning,
+            Tasks::Supercollider,
+            Tasks::Meditate,
+            Tasks::Writing,
+            Tasks::Poetry,
+            Tasks::Chess,
+            Tasks::Javascript,
+            Tasks::Design,
+        ];
+
+        let mut input = String::new();
+        println!("enter the number for the task:");
+        list.iter().for_each(|e| println!("{}", e));
+        std::io::stdin()
+            .read_line(&mut input)
+            .expect("Failed to read");
+        let task = match input.trim().parse::<i64>().unwrap() {
+            0 => Tasks::Ruby,
+            1 => Tasks::Rust,
+            2 => Tasks::Monome,
+            3 => Tasks::Website,
+            4 => Tasks::Music,
+            5 => Tasks::Learning,
+            6 => Tasks::Supercollider,
+            7 => Tasks::Meditate,
+            8 => Tasks::Writing,
+            9 => Tasks::Poetry,
+            10 => Tasks::Chess,
+            11 => Tasks::Javascript,
+            12 => Tasks::Design,
+            _ => Tasks::None,
+        };
+
+        println!("task: {:?}", task);
+        task
+    }
+}
+
 #[derive(Debug)]
 struct Pomodoro {
     start_time: String,
     work_length: i64,
-    break_length: i64,
     task: Tasks,
 }
 
@@ -24,52 +110,22 @@ impl fmt::Display for Pomodoro {
 impl Pomodoro {
     fn new(work_length: i64, break_length: i64) -> Self {
         let mut alert = Command::new("./alert.sh");
-        let task = choose_task();
+        let task = Tasks::choose();
         let (start_time, work_duration, break_duration) = get_times(work_length, break_length);
 
         oblique_strategies();
         thread::sleep(work_duration.to_std().unwrap());
-        alert.status();
+        alert.output();
 
         println!("take a break for 5 minutes");
 
         thread::sleep(break_duration.to_std().unwrap());
-        alert.status();
+        alert.output();
 
         Self {
             start_time,
             work_length,
-            break_length,
             task,
-        }
-    }
-}
-
-#[derive(Debug)]
-enum Tasks {
-    Ruby,
-    Rust,
-    Monome,
-    Website,
-    Music,
-    Learning,
-    Supercollider,
-    Meditate,
-    None,
-}
-
-impl fmt::Display for Tasks {
-    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        match *self {
-            Tasks::Ruby => write!(f, "0: Ruby"),
-            Tasks::Rust => write!(f, "1: Rust"),
-            Tasks::Monome => write!(f, "2: Monome"),
-            Tasks::Website => write!(f, "3: Website"),
-            Tasks::Music => write!(f, "4: Music"),
-            Tasks::Learning => write!(f, "5: Learning"),
-            Tasks::Supercollider => write!(f, "6: Supercollider"),
-            Tasks::Meditate => write!(f, "7: Meditate"),
-            Tasks::None => write!(f, ""),
         }
     }
 }
@@ -79,40 +135,6 @@ fn oblique_strategies() {
     if b {
         let _ = Command::new("./obliquestrategies.sh").status();
     }
-}
-
-fn choose_task() -> Tasks {
-    let list = [
-        Tasks::Ruby,
-        Tasks::Rust,
-        Tasks::Monome,
-        Tasks::Website,
-        Tasks::Music,
-        Tasks::Learning,
-        Tasks::Supercollider,
-        Tasks::Meditate,
-    ];
-
-    let mut input = String::new();
-    println!("enter the number for the task:");
-    list.iter().for_each(|e| println!("{}", e));
-    std::io::stdin()
-        .read_line(&mut input)
-        .expect("Failed to read");
-    let task = match input.trim().parse::<i64>().unwrap() {
-        0 => Tasks::Ruby,
-        1 => Tasks::Rust,
-        2 => Tasks::Monome,
-        3 => Tasks::Website,
-        4 => Tasks::Music,
-        5 => Tasks::Learning,
-        6 => Tasks::Supercollider,
-        7 => Tasks::Meditate,
-        _ => Tasks::None,
-    };
-
-    println!("task: {:?}", task);
-    task
 }
 
 fn get_times(len_work: i64, len_break: i64) -> (String, Duration, Duration) {
@@ -130,7 +152,7 @@ fn get_times(len_work: i64, len_break: i64) -> (String, Duration, Duration) {
     return (now, work_duration, break_duration);
 }
 
-fn main() {
+fn main() -> Result<(), std::fmt::Error> {
     let _ = Command::new("clear").status();
     let mut file = fs::OpenOptions::new()
         .write(true)
@@ -139,4 +161,5 @@ fn main() {
         .unwrap();
     let pom = Pomodoro::new(25, 5);
     writeln!(file, "{}", pom);
+    Ok(())
 }

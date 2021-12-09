@@ -1,0 +1,1 @@
+{"Chess"=>25, "Ruby"=>150, "Javascript"=>100, "Design"=>125, "Learning"=>25, "total"=>425}
