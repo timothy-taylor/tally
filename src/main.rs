@@ -20,6 +20,7 @@ enum Tasks {
     Chess,
     Javascript,
     Design,
+    Journal,
     None,
 }
 
@@ -39,6 +40,7 @@ impl fmt::Display for Tasks {
             Tasks::Chess => write!(f, "10: Chess"),
             Tasks::Javascript => write!(f, "11: Javascript"),
             Tasks::Design => write!(f, "12: Design"),
+            Tasks::Journal => write!(f, "13: Journal"),
             Tasks::None => write!(f, ""),
         }
     }
@@ -60,6 +62,7 @@ impl Tasks {
             Tasks::Chess,
             Tasks::Javascript,
             Tasks::Design,
+            Tasks::Journal,
         ];
 
         let mut input = String::new();
@@ -82,6 +85,7 @@ impl Tasks {
             10 => Tasks::Chess,
             11 => Tasks::Javascript,
             12 => Tasks::Design,
+            13 => Tasks::Journal,
             _ => Tasks::None,
         };
 
