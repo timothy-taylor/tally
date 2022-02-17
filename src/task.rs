@@ -1,5 +1,3 @@
-use std::{fmt, fs, io::prelude::*, path::Path, process::Command, thread};
-
 // any additions to the task enum must be echoed across the
 // Task implementations
 #[derive(Debug)]
@@ -21,31 +19,9 @@ pub enum Tasks {
     None,
 }
 
-impl fmt::Display for Tasks {
-    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        match *self {
-            Tasks::Ruby => write!(f, "0: Ruby"),
-            Tasks::Rust => write!(f, "1: Rust"),
-            Tasks::Monome => write!(f, "2: Monome"),
-            Tasks::Website => write!(f, "3: Website"),
-            Tasks::Music => write!(f, "4: Music"),
-            Tasks::Learning => write!(f, "5: Learning"),
-            Tasks::Supercollider => write!(f, "6: Supercollider"),
-            Tasks::Meditate => write!(f, "7: Meditate"),
-            Tasks::Writing => write!(f, "8: Writing"),
-            Tasks::Poetry => write!(f, "9: Poetry"),
-            Tasks::Chess => write!(f, "10: Chess"),
-            Tasks::Javascript => write!(f, "11: Javascript"),
-            Tasks::Design => write!(f, "12: Design"),
-            Tasks::Journal => write!(f, "13: Journal"),
-            Tasks::None => write!(f, ""),
-        }
-    }
-}
-
 impl Tasks {
-    pub fn choose() -> Tasks {
-        let list = [
+    pub fn print_list() {
+        const LIST: [Tasks; 14] = [
             Tasks::Ruby,
             Tasks::Rust,
             Tasks::Monome,
@@ -62,27 +38,26 @@ impl Tasks {
             Tasks::Journal,
         ];
 
-        let mut input = String::new();
-        println!("enter the number for the task:");
-        list.iter().for_each(|e| println!("{}", e));
-        std::io::stdin()
-            .read_line(&mut input)
-            .expect("Failed to read");
-        let task = match input.trim().parse::<i64>().unwrap() {
-            0 => Tasks::Ruby,
-            1 => Tasks::Rust,
-            2 => Tasks::Monome,
-            3 => Tasks::Website,
-            4 => Tasks::Music,
-            5 => Tasks::Learning,
-            6 => Tasks::Supercollider,
-            7 => Tasks::Meditate,
-            8 => Tasks::Writing,
-            9 => Tasks::Poetry,
-            10 => Tasks::Chess,
-            11 => Tasks::Javascript,
-            12 => Tasks::Design,
-            13 => Tasks::Journal,
+        LIST.iter().for_each(|e| println!("{:?}", e));
+    }
+
+    pub fn choose(input: &str) -> Tasks {
+        let formatted = input.trim().to_lowercase();
+        let task = match formatted.as_str() {
+            "ruby" => Tasks::Ruby,
+            "rust" => Tasks::Rust,
+            "monome" => Tasks::Monome,
+            "website" => Tasks::Website,
+            "music" => Tasks::Music,
+            "learning" => Tasks::Learning,
+            "supercollider" => Tasks::Supercollider,
+            "meditate" => Tasks::Meditate,
+            "writing" => Tasks::Writing,
+            "poetry" => Tasks::Poetry,
+            "chess" => Tasks::Chess,
+            "javascript" => Tasks::Javascript,
+            "design" => Tasks::Design,
+            "journal" => Tasks::Journal,
             _ => Tasks::None,
         };
 
