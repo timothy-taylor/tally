@@ -1,1 +1,1 @@
-{"Chess"=>25, "Ruby"=>700, "Javascript"=>1325, "Design"=>550, "Learning"=>225, "total"=>3850, "Meditate"=>175, "Journal"=>300, "Website"=>100, "Music"=>150, "Monome"=>300}
+{"Chess"=>25, "Ruby"=>700, "Javascript"=>1325, "Design"=>550, "Learning"=>225, "total"=>3875, "Meditate"=>175, "Journal"=>300, "Website"=>100, "Music"=>150, "Monome"=>300, "Rust"=>25}

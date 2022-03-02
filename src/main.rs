@@ -11,7 +11,6 @@ pub mod utility;
 use crate::pomodoro::Pomodoro;
 use crate::task::Tasks;
 
-// Result<(), std::fmt::Error>
 fn main() -> Result<(), std::fmt::Error> {
     let matches = Command::new("Tally")
         .author("Tim Taylor")
